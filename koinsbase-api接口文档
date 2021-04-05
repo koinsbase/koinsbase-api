@@ -54,11 +54,11 @@
         return hs.toString().toLowerCase();
     }
 简要描述：
-币种列表
+币种列表
 请求URL：
-/v1/common/currencys
+/v1/common/currencys
 请求方式：
-GET
+GET
 参数：
 ​ 无
 返回示例
