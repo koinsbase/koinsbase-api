@@ -91,13 +91,13 @@ code	string	状态码
 msg	string	错误信息
 data	array	BTC,ETH,LTC...均为系统支持币种名称
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-系统所有交易对
+系统所有交易对
 请求URL：
-/v1/common/symbols
+/v1/common/symbols
 请求方式：
-GET
+GET
 参数：
 ​ 无
 返回示例
@@ -136,13 +136,13 @@ symbol	string	BBCUSDT,BBQUSDT,BOTETH...均为系统支持的交易对名称
 sizePrecision	int	数量小数位精度
 pricePrecision	int	价格小数位精度
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-单个交易对的最新行情
+单个交易对的最新行情
 请求URL：
-/v1/common/getQuote
+/v1/common/getQuote
 请求方式：
-POST
+POST
 参数：
 参数名	必选	类型	说明
 symbol	是	string	交易对的名称 例如：BTCUSDT
@@ -180,13 +180,13 @@ volume	bigDecimal	成交量
 quoteVolume	bigDecimal	成交额
 tradeNum	long	成交数
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-多个交易对最新行情
+多个交易对最新行情
 请求URL：
-/v1/common/getQuotes
+/v1/common/getQuotes
 请求方式：
-POST
+POST
 参数：
 参数名	必选	类型	说明
 symbols	是	string	交易对的名称 例如：BTCUSDT,ETHBTC,LTCBTC 注：每个交易对之间用,隔开
@@ -250,13 +250,13 @@ volume	bigDecimal	成交量
 quoteVolume	bigDecimal	成交额
 tradeNum	long	成交数
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-单个交易对最新深度
+单个交易对最新深度
 请求URL：
-/v1/market/depth
+/v1/market/depth
 请求方式：
-POST
+POST
 参数：
 参数名	必选	类型	说明
 symbol	是	string	交易对的名称 例如：BTCUSDT
@@ -362,13 +362,13 @@ pairId	int	交易对ID
 bids	array	买盘[price(成交价), amount(成交量)], 按price降序
 asks	array	卖盘[price(成交价), amount(成交量)], 按price升序
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-单个交易对最新成交
+单个交易对最新成交
 请求URL：
-/v1/market/trade
+/v1/market/trade
 请求方式：
-POST
+POST
 参数：
 参数名	必选	类型	说明
 symbol	是	string	交易对的名称 例如：BTCUSDT
@@ -413,13 +413,13 @@ size	bigDecimal	成交数量
 takerSide	string	主动成交方向
 time	long	成交时间
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-单个交易对的K线
+单个交易对的K线
 请求URL：
-/v1/symbol/kline
+/v1/symbol/kline
 请求方式：
-POST
+POST
 参数：
 参数名	必选	类型	说明
 symbol	是	string	交易对的名称 例如：BTCUSDT
@@ -484,13 +484,13 @@ open	bigDecimal	开盘价
 volume	bigDecimal	成交量
 tradeNum	bigDecimal	成交数
 quoteVolume	bigDecimal	成交额
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-查询用户账户余额
+查询用户账户余额
 请求URL：
-/v1/account/balance
+/v1/account/balance
 请求方式：
-POST
+POST
 参数：
 参数名	必选	类型	说明
 nonceStr	是	string	随机字符串
@@ -536,13 +536,13 @@ balance	bigDecimal	余额
 currency	long	币种
 type	string	trade: 交易余额，frozen: 冻结余额
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-用户当前委托
+用户当前委托
 请求URL：
-/v1/order/orders
+/v1/order/orders
 请求方式：
-POST
+POST
 参数：
 参数名	必选	类型	说明
 symbol	是	string	交易对的名称 例如：BTCUSDT
@@ -588,13 +588,13 @@ lastFilledPrice	bigDecimal	最后成交价格
 commission	bigDecimal	累计产生交易手续费
 createdDate	long	下单时间
 备注		
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-用户历史委托
+用户历史委托
 请求URL：
-/v1/order/history/orders
+/v1/order/history/orders
 请求方式：
-POST
+POST
 参数：
 参数名	必选	类型	说明
 symbol	是	string	交易对的名称 例如：BTCUSDT
@@ -658,12 +658,12 @@ lastFilledPrice	bigDecimal	最后成交价格
 commission	bigDecimal	累计产生交易手续费
 createdDate	long	下单时间
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-用户历史成交
+用户历史成交
 请求URL：
-/v1/order/matchresults 请求方式：
-POST
+/v1/order/matchresults 请求方式：
+POST
 参数：
 参数名	必选	类型	说明
 symbol	是	string	交易对的名称 例如：BTCUSDT
@@ -717,13 +717,13 @@ created-at	bigDecimal	成交时间
 id	long	订单成交记录ID
 order-id	long	订单 ID
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-用户下单
+用户下单
 请求URL：
-/v1/order/placeOrder
+/v1/order/placeOrder
 请求方式：
-POST
+POST
 参数：
 参数名	必选	类型	说明
 symbol	是	string	交易对的名称 例如：BTCUSDT
