@@ -1,56 +1,66 @@
 请求说明：
-1.访问地址：https://www.koinsbase.cc/#/
-2.签名认证：目前关于apikey申请和修改，请在“个人中心-API管理”页面进行相关操作。其中AccessKey为API访问密钥，SecretKey为用户对请求进行签名的密钥（仅申请时可见） 。
-3.签名方法：每个API接口的所有请求参数均参与签名，参数变量空，不需要参与签名。转化，参与签名的参数还有随机字符串（ncenceStr），替代（时间戳），API访问秘钥（accessKey）；将所有参数按照参数名称ASCII码顺序进行排序，通过APISercret使用HmacSHA256协议进行加密，得到签名参数sign
-	// Java版本
-	签名方法public  static  String sha256_HMAC（ SortedMap < String，String > paramMap， String secret）{
-         String params =  “ ” ;
-        字符串firstKey = paramMap 。firstKey（）;
-        为（地图。条目<字符串，字符串>条目： paramMap 。的entrySet（））{
-             //如果是第一个不加＆
-            字符串键=条目。getKey（）;
-            字符串值=条目。getValue（）;
-            如果（！ firstKey 。等于（键））{
-                参数+ =  “＆” ;
+1.访问地址：https：//www.koinsbase.cc/#/
+2.签名认证 :目前关于apikey申请和修改，请在“个人中心 - API管理”页面进行相关操作。其中AccessKey为API 访问 密钥，SecretKey为用户对请求进行签名的密钥（仅申请时可见）。
+3.签名方法 :每个API接口的所有请求参数均参与签名，参数值为空，不需要参与签名。此外，参与签名的参数还有随机字符串（nonceStr）、时间戳（timestamp）、API访问秘钥（accessKey）;将所有参数按照参数名ASCII码顺序进行排序，通过APISercret使用HmacSHA256协议进行加密，得到签名参数sign
+	// Java版本签名方法
+	public static String sha256_HMAC(SortedMap<String, String> paramMap, String secret) {
+        String params = "";
+
+        String firstKey = paramMap.firstKey();
+        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+            // 如果是第一个不加&
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (!firstKey.equals(key)) {
+                params += "&";
+
             }
-            参数+ =键+  “ = ”  +值；
+            params += key + "=" + value;
         }
-        返回sha256_HMAC（params，secret）;
+
+        return sha256_HMAC(params, secret);
     }
-    / **      * sha256_HMAC加密* / public static String sha256_HMAC（ String param， String secret）{     
-      
-        字符串hash =  “ ” ;
-        试试{
-             Mac sha256_HMAC =  Mac 。getInstance（“ HmacSHA256 ”）;
-            SecretKeySpec SECRET_KEY = 新 SecretKeySpec（秘密。 getBytes（）构造，“ HmacSHA256 ”）;
-            sha256_HMAC 。初始化（secret_key）;
-            字节[]字节= sha256_HMAC 。doFinal（PARAM 。的getBytes（））;
-            哈希= byteArrayToHexString（bytes）;
-        } catch（异常e）{
-            系统。出来。的println（ “错误HmacSHA256 =========== ”  + ë 。的getMessage（））;
+
+    /**     * sha256_HMAC 加密     */
+    public static String sha256_HMAC(String param, String secret) {
+
+        String hash = "";
+
+        try {
+            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+
+            SecretKeySpec secret_key = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+
+            sha256_HMAC.init(secret_key);
+
+            byte[] bytes = sha256_HMAC.doFinal(param.getBytes());
+            hash = byteArrayToHexString(bytes);
+        } catch (Exception e) {
+            System.out.println("Error HmacSHA256 ===========" + e.getMessage());
         }
-        返回哈希
+        return hash;
     }
-    / **      *将加密后的字节分段转成二进制* /私有静态字符串byteArrayToHexString（ byte [] b）{
-         StringBuilder hs = new StringBuilder（）;
-        字符串stmp;
-        对（ INT Ñ = 0，B =！空&& Ñ < b。长度; N ++）{     
-           
-            stmp = 整数。toHexString（b [n] ＆ 0XFF）;
-            如果（STMP 。长度（）==  1）
-                hs 。append（' 0 '）;
-            hs 。append（stmp）;
+
+    /**     * 将加密后的字节数组转成字符串     */
+    private static String byteArrayToHexString(byte[] b) {
+        StringBuilder hs = new StringBuilder();
+        String stmp;
+        for (int n = 0; b != null && n < b.length; n++) {
+            stmp = Integer.toHexString(b[n] & 0XFF);
+            if (stmp.length() == 1)
+                hs.append('0');
+            hs.append(stmp);
         }
-        返回hs 。toString（）。toLowerCase（）;
+        return hs.toString().toLowerCase();
     }
 简要描述：
 币种列表
 请求URL：
 /v1/common/currencys
 请求方式：
-得到
+GET
 参数：
-无
+​ 无
 返回示例
  {
     "code": "0",
@@ -75,11 +85,11 @@
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-数据	大批	BTC，ETH，LTC ...可以使用的系统支持币种名称
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+data	array	BTC,ETH,LTC...均为系统支持币种名称
 备注
 更多返回错误代码请看首页的错误代码描述
 简要描述：
@@ -87,9 +97,9 @@
 请求URL：
 /v1/common/symbols
 请求方式：
-得到
+GET
 参数：
-无
+​ 无
 返回示例
 {
   "code": 0,
@@ -117,25 +127,25 @@
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-pairId	整型	交易对ID
-象征	细绳	BBCUSDT，BBQUSDT，BOTETH ...连续系统支持的交易对名称
-尺寸精度	整型	数量小数位精度
-pricePrecision	整型	价格小数位精度
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+pairId	int	交易对ID
+symbol	string	BBCUSDT,BBQUSDT,BOTETH...均为系统支持的交易对名称
+sizePrecision	int	数量小数位精度
+pricePrecision	int	价格小数位精度
 备注
 更多返回错误代码请看首页的错误代码描述
 简要描述：
-单一交易对的最新行情
+单个交易对的最新行情
 请求URL：
 /v1/common/getQuote
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-象征	是	细绳	交易对的名称例如：BTCUSDT
+symbol	是	string	交易对的名称 例如：BTCUSDT
 返回示例
 {
     "code": "0",
@@ -155,20 +165,20 @@ pricePrecision	整型	价格小数位精度
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-pairId	整型	交易对ID
-从时间	长	起始时间
-到时间	长	最终时间
-打开	bigDecimal	开盘价
-高的	bigDecimal	最高价
-低的	bigDecimal	最低价
-关闭	bigDecimal	收盘价
-体积	bigDecimal	成交量
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+pairId	int	交易对ID
+fromTime	long	起始时间
+toTime	long	截止时间
+open	bigDecimal	开盘价
+high	bigDecimal	最高价
+low	bigDecimal	最低价
+close	bigDecimal	收盘价
+volume	bigDecimal	成交量
 quoteVolume	bigDecimal	成交额
-tradeNum	长	成交数
+tradeNum	long	成交数
 备注
 更多返回错误代码请看首页的错误代码描述
 简要描述：
@@ -176,10 +186,10 @@ tradeNum	长	成交数
 请求URL：
 /v1/common/getQuotes
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-符号	是	细绳	交易对的名称例如：BTCUSDT，ETHBTC，LTCBTC注：每个交易对之间用,替换
+symbols	是	string	交易对的名称 例如：BTCUSDT,ETHBTC,LTCBTC 注：每个交易对之间用,隔开
 返回示例
 {
     "code": "0",
@@ -225,31 +235,31 @@ tradeNum	长	成交数
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-pairId	整型	交易对ID
-从时间	长	起始时间
-到时间	长	最终时间
-打开	bigDecimal	日K线开盘价
-高的	bigDecimal	日K线最高价
-低的	bigDecimal	日K线最低价
-关闭	bigDecimal	日K线收盘价
-体积	bigDecimal	成交量
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+pairId	int	交易对ID
+fromTime	long	起始时间
+toTime	long	截止时间
+open	bigDecimal	日K线 开盘价
+high	bigDecimal	日K线 最高价
+low	bigDecimal	日K线 最低价
+close	bigDecimal	日K线 收盘价
+volume	bigDecimal	成交量
 quoteVolume	bigDecimal	成交额
-tradeNum	长	成交数
+tradeNum	long	成交数
 备注
 更多返回错误代码请看首页的错误代码描述
 简要描述：
-单一交易对最新深度
+单个交易对最新深度
 请求URL：
 /v1/market/depth
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-象征	是	细绳	交易对的名称例如：BTCUSDT
+symbol	是	string	交易对的名称 例如：BTCUSDT
 返回示例
 {
     "code": "0",
@@ -344,77 +354,77 @@ tradeNum	长	成交数
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-pairId	整型	交易对ID
-竞标	大批	买盘[价格（成交价），数量（成交量）]，按价格降序
-问	大批	卖盘[价格（成交价），数量（成交量）]，按价格升序
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+pairId	int	交易对ID
+bids	array	买盘[price(成交价), amount(成交量)], 按price降序
+asks	array	卖盘[price(成交价), amount(成交量)], 按price升序
 备注
 更多返回错误代码请看首页的错误代码描述
 简要描述：
-单一交易对最新成交
+单个交易对最新成交
 请求URL：
 /v1/market/trade
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-象征	是	细绳	交易对的名称例如：BTCUSDT
+symbol	是	string	交易对的名称 例如：BTCUSDT
 返回示例
 {
-     “ code ”： “ 0 ”，
-     “ msg ”： “ ok ”，
-     “ data ”： {
-         “ pairId ”： 15，
-         “ execs ”： [
+    "code": "0",
+    "msg": "ok",
+    "data": {
+        "pairId": 15,
+        "execs": [
             {
-                “价格”： 0.012424，
-                 “大小”： 0.160776，
-                 “ takerSide ”： “ B ”，
-                 “时间”： 1530915770000
-            }，
+                "price": 0.012424,
+                "size": 0.160776,
+                "takerSide": "B",
+                "time": 1530915770000
+            },
             {
-                “价格”： 0.012356，
-                 “大小”： 0.115969，
-                 “ takerSide ”： “ S ”，
-                 “时间”： 1530915749000
-            }，
+                "price": 0.012356,
+                "size": 0.115969,
+                "takerSide": "S",
+                "time": 1530915749000
+            },
             {
-                “价格”： 0.012436，
-                 “大小”： 0.181267，
-                 “ takerSide ”： “ B ”，
-                 “时间”： 1530915725000
+                "price": 0.012436,
+                "size": 0.181267,
+                "takerSide": "B",
+                "time": 1530915725000
             }
 		]
 	}
 }    
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-pairId	整型	交易对ID
-高管	大批	成交记录
-价格	bigDecimal	成交价
-尺寸	bigDecimal	成交数量
-接受方	细绳	主动成交方向
-时间	长	成交时间
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+pairId	int	交易对ID
+execs	array	成交记录
+price	bigDecimal	成交价
+size	bigDecimal	成交数量
+takerSide	string	主动成交方向
+time	long	成交时间
 备注
 更多返回错误代码请看首页的错误代码描述
 简要描述：
-单一交易对的K线
+单个交易对的K线
 请求URL：
 /v1/symbol/kline
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-象征	是	细绳	交易对的名称例如：BTCUSDT
-tradeBarType	是	细绳	K线类型MN1 1分钟，MN5 5分钟，MN15 15分钟，MN30 30分钟，H1 1小时，H2 2小时，H4 4小时，H6 6小时，H12 12小时，D1 1天，W1 1周，M1 1月
-限制	是	长	获取数量
+symbol	是	string	交易对的名称 例如：BTCUSDT
+tradeBarType	是	string	K线类型 MN1 1分钟，MN5 5分钟，MN15 15 分钟，MN30 30分钟，H1 1小时，H2 2小时，H4 4小时，H6 6小时，H12 12 小时，D1 1天，W1 1周，M1 1月
+limit	是	long	获取数量
 返回示例
 {
     "code": "0",
@@ -459,19 +469,19 @@ tradeBarType	是	细绳	K线类型MN1 1分钟，MN5 5分钟，MN15 15分钟，MN
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-pairId	整型	交易对ID
-barId	长	K线ID
-barType	细绳	K线类型
-ID	长	成交数量
-关闭	bigDecimal	收盘价
-高的	bigDecimal	最高价
-低的	bigDecimal	最低价
-打开	bigDecimal	开盘价
-体积	bigDecimal	成交量
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+pairId	int	交易对ID
+barId	long	K线ID
+barType	string	K线类型
+id	long	成交数量
+close	bigDecimal	收盘价
+high	bigDecimal	最高价
+low	bigDecimal	最低价
+open	bigDecimal	开盘价
+volume	bigDecimal	成交量
 tradeNum	bigDecimal	成交数
 quoteVolume	bigDecimal	成交额
 更多返回错误代码请看首页的错误代码描述
@@ -480,13 +490,13 @@ quoteVolume	bigDecimal	成交额
 请求URL：
 /v1/account/balance
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-随机数	是	细绳	随机弦
-时间戳记	是	细绳	最高
-accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
-标志	是	细绳	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
+nonceStr	是	string	随机字符串
+timestamp	是	string	时间戳
+accessKey	是	string	koinsbase网站个人中心 APIKey管理中创建的KeyID
+sign	是	string	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
 返回示例
 {
     "code": "0",
@@ -516,15 +526,15 @@ accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-ID	细绳	用户ID
-状态	细绳	工作：正常锁：账户被锁定
-平衡	bigDecimal	盈余
-货币	长	币种
-类型	细绳	trade：交易余额，frozen：冻结余额
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+id	string	用户ID
+state	string	working：正常 lock：账户被锁定
+balance	bigDecimal	余额
+currency	long	币种
+type	string	trade: 交易余额，frozen: 冻结余额
 备注
 更多返回错误代码请看首页的错误代码描述
 简要描述：
@@ -532,14 +542,14 @@ ID	细绳	用户ID
 请求URL：
 /v1/order/orders
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-象征	是	细绳	交易对的名称例如：BTCUSDT
-随机数	是	细绳	随机弦
-时间戳记	是	细绳	最高
-accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
-标志	是	细绳	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
+symbol	是	string	交易对的名称 例如：BTCUSDT
+nonceStr	是	string	随机字符串
+timestamp	是	string	时间戳
+accessKey	是	string	koinsbase网站个人中心 APIKey管理中创建的KeyID
+sign	是	string	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
 返回示例
 {
     "code": "0",
@@ -561,22 +571,22 @@ accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-orderId	长	订单ID
-用户身份	长	用户ID
-pairId	长	交易对ID
-actionType	细绳	买卖方向B-买S-卖
-订单状态	细绳	订单状态S-已提交P-部分成交F-全部成交C-已撤销CP-部分成交已撤销E-失败EP-部分成交剩余失败D-仅用于市价单：没有成交，已经结束DP-仅用于市价单：部分成交，已经结束
-orderType	细绳	订单的类型限价单（L）市价单（M）L止盈止损单（SL）
-价格	bigDecimal	下单价格
-尺寸	bigDecimal	下单量
-fillSize	bigDecimal	已成交数量
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+orderId	long	订单ID
+userId	long	用户ID
+pairId	long	交易对ID
+actionType	string	买卖方向 B - Buy S - Sell
+orderStatus	string	订单状态 S - 已提交 P - 部分成交 F - 全部成交 C - 已撤销 CP - 部分成交已撤销 E - 失败 EP - 部分成交剩余失败 D - 仅用于市价单：没有成交，已经结束 DP - 仅用于市价单：部分成交，已经结束
+orderType	string	订单的类型 限价单(L) 市价单(M) L 止盈止损单(SL)
+price	bigDecimal	下单价格
+size	bigDecimal	下单量
+filledSize	bigDecimal	已成交数量
 lastFilledPrice	bigDecimal	最后成交价格
-委员会	bigDecimal	逐步产生交易手续费
-创建日期	长	下单时间
+commission	bigDecimal	累计产生交易手续费
+createdDate	long	下单时间
 备注		
 更多返回错误代码请看首页的错误代码描述
 简要描述：
@@ -584,16 +594,16 @@ lastFilledPrice	bigDecimal	最后成交价格
 请求URL：
 /v1/order/history/orders
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-象征	是	细绳	交易对的名称例如：BTCUSDT
-随机数	是	细绳	随机弦
-时间戳记	是	细绳	最高
-accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
-pageNum	是	整型	页码
-页面大小	是	整型	每页显示条数
-标志	是	细绳	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
+symbol	是	string	交易对的名称 例如：BTCUSDT
+nonceStr	是	string	随机字符串
+timestamp	是	string	时间戳
+accessKey	是	string	koinsbase网站个人中心 APIKey管理中创建的KeyID
+pageNum	是	int	页码
+pageSize	是	int	每页显示条数
+sign	是	string	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
 返回示例
 {
     "code": "0",
@@ -631,41 +641,41 @@ pageNum	是	整型	页码
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-orderId	长	订单ID
-用户身份	长	用户ID
-pairId	长	交易对ID
-actionType	细绳	买卖方向B-买S-卖
-订单状态	细绳	订单状态S-已提交P-部分成交F-全部成交C-已撤销CP-部分成交已撤销E-失败EP-部分成交剩余失败D-仅用于市价单：没有成交，已经结束DP-仅用于市价单：部分成交，已经结束
-orderType	细绳	订单的类型限价单（L）市价单（M）L止盈止损单（SL）
-价格	bigDecimal	下单价格
-尺寸	bigDecimal	下单量
-fillSize	bigDecimal	已成交数量
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+orderId	long	订单ID
+userId	long	用户ID
+pairId	long	交易对ID
+actionType	string	买卖方向 B - Buy S - Sell
+orderStatus	string	订单状态 S - 已提交 P - 部分成交 F - 全部成交 C - 已撤销 CP - 部分成交已撤销 E - 失败 EP - 部分成交剩余失败 D - 仅用于市价单：没有成交，已经结束 DP - 仅用于市价单：部分成交，已经结束
+orderType	string	订单的类型 限价单(L) 市价单(M) L 止盈止损单(SL)
+price	bigDecimal	下单价格
+size	bigDecimal	下单量
+filledSize	bigDecimal	已成交数量
 lastFilledPrice	bigDecimal	最后成交价格
-委员会	bigDecimal	逐步产生交易手续费
-创建日期	长	下单时间
+commission	bigDecimal	累计产生交易手续费
+createdDate	long	下单时间
 备注
 更多返回错误代码请看首页的错误代码描述
 简要描述：
 用户历史成交
 请求URL：
 /v1/order/matchresults 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-象征	是	细绳	交易对的名称例如：BTCUSDT
-从日期	是	细绳	起始日期查询开始日期，日期格式yyyy-mm-dd
-迄今为止	是	细绳	结束日期查询结束日期，日期格式yyyy-mm-dd
-从	是	细绳	查询起始ID（订单成交记录ID）
-直接的	是	整型	查询方向（最小值next，成交记录ID由大到小排序）prev向前前向后后
-尺寸	是	整型	查询记录大小默认值100取值范围<= 100
-随机数	是	细绳	随机弦
-时间戳记	是	细绳	最高
-accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
-标志	是	细绳	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
+symbol	是	string	交易对的名称 例如：BTCUSDT
+fromDate	是	string	起始日期 查询开始日期, 日期格式yyyy-mm-dd
+toDate	是	string	结束日期 查询结束日期, 日期格式yyyy-mm-dd
+from	是	string	查询起始ID （订单成交记录ID）
+direct	是	int	查询方向 （默认值next，成交记录ID由大到小排序） prev 向前 next 向后
+size	是	int	查询记录大小 默认值 100 取值范围 <=100
+nonceStr	是	string	随机字符串
+timestamp	是	string	时间戳
+accessKey	是	string	koinsbase网站个人中心 APIKey管理中创建的KeyID
+sign	是	string	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
 {
     "code": "0",
     "msg": "ok",
@@ -694,18 +704,18 @@ accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
 }	
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-象征	细绳	交易对
-比赛编号	长	撮合ID
-填充量	bigDecimal	成交数量
-价格	bigDecimal	成交价格
-手续费	bigDecimal	成交手续费
-创建于	bigDecimal	成交时间
-ID	长	订单成交记录ID
-订单编号	长	订单编号
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+symbol	string	交易对
+match-id	long	撮合ID
+filled-amount	bigDecimal	成交数量
+price	bigDecimal	成交价格
+filled-fees	bigDecimal	成交手续费
+created-at	bigDecimal	成交时间
+id	long	订单成交记录ID
+order-id	long	订单 ID
 备注
 更多返回错误代码请看首页的错误代码描述
 简要描述：
@@ -713,20 +723,20 @@ ID	长	订单成交记录ID
 请求URL：
 /v1/order/placeOrder
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-象征	是	细绳	交易对的名称例如：BTCUSDT
-行动	是	细绳	的订单买卖向操作B买S卖
-orderType	是	细绳	订单类型L限价单M市价单SL止盈止损单
-价格	是	细绳	价格
-triggerPrice	是	细绳	止盈止损单触发价
-尺寸	是	整型	数量
-数量	是	细绳	市价买入，买入预算
-随机数	是	细绳	随机弦
-时间戳记	是	细绳	最高
-accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
-标志	是	细绳	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
+symbol	是	string	交易对的名称 例如：BTCUSDT
+action	是	string	订单的买卖向操作 B 买 S 卖
+orderType	是	string	订单类型 L 限价单 M 市价单 SL 止盈止损单
+price	是	string	价格
+triggerPrice	是	string	止盈止损单触发价
+size	是	int	数量
+amount	是	string	市价买入,买入总额
+nonceStr	是	string	随机字符串
+timestamp	是	string	时间戳
+accessKey	是	string	koinsbase网站个人中心 APIKey管理中创建的KeyID
+sign	是	string	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
 返回示例
 {
     "code": "0",
@@ -737,26 +747,26 @@ accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
-orderId	长	订单ID
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
+orderId	long	订单ID
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-用户撤单
+用户撤单
 请求URL：
-/v1/order/cancelOrder
+/v1/order/cancelOrder
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-orderId	是	细绳	交易ID
-随机数	是	细绳	随机弦
-时间戳记	是	细绳	最高
-accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
-标志	是	细绳	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
+orderId	是	string	交易ID
+nonceStr	是	string	随机字符串
+timestamp	是	string	时间戳
+accessKey	是	string	koinsbase网站个人中心 APIKey管理中创建的KeyID
+sign	是	string	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
 返回示例
 {
     "code": "0",
@@ -764,25 +774,25 @@ accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
 }
 返回参数说明
 参数名	类型	说明
-代码	细绳	状态码
-0成功
--1失败
-味精	细绳	错误信息
+code	string	状态码
+0 成功
+-1 失败
+msg	string	错误信息
 备注
-更多返回错误代码请看首页的错误代码描述
+更多返回错误代码请看首页的错误代码描述
 简要描述：
-查询订单详情
+查询订单详情
 请求URL：
-/v1/order/getOrderDetail
+/v1/order/getOrderDetail
 请求方式：
-邮政
+POST
 参数：
 参数名	必选	类型	说明
-orderId	是	细绳	交易ID
-随机数	是	细绳	随机弦
-时间戳记	是	细绳	最高
-accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
-标志	是	细绳	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
+orderId	是	string	交易ID
+nonceStr	是	string	随机字符串
+timestamp	是	string	时间戳
+accessKey	是	string	koinsbase网站个人中心 APIKey管理中创建的KeyID
+sign	是	string	所有参数使用ApiSecret加密获得的签名（sign本身不参与签名）
 返回示例
 {
     "code": "0",
@@ -806,19 +816,19 @@ accessKey	是	细绳	koinsbase.cc网站个人中心APIKey管理中创建的KeyID
 }
 返回参数说明
 参数名	类型	说明
-actionType	细绳	订单买卖类型，卖出（S），买入（B）
-积极的	布尔值	是否仍然活跃，活跃单（true）-挂单中的订单，非活跃单（false）-已成交或已取消的订单
-委员会	双倍的	订单逐步产生交易手续费
-创建日期	长	挂单时间（GMT时间）
-fillSize	双倍的	订单已成交数量
-lastFilledPrice	双倍的	订单最后成交价格
-orderId	长	订单ID
-订单状态	细绳	订单状态，已提交（S），部分成交（P），成交（F），已撤销（C），部成已撤（CP），错误（E），部成错误（EP），市价单无成交（D），市价单部份成交（DP）
-orderType	细绳	订单的类型限价单（L）市价单（M）L止盈止损单（SL）
-价格	双倍的	订单价格
-尺寸	双倍的	订单数量
-象征	细绳	订单交易对SYMBOL
-triggerPrice	双倍的	止盈止损单触发价
-triggerStatus	布尔值	true已触发false未触发
+actionType	string	订单买卖类型, 卖出(S)、买入(B)
+active	boolean	是否仍然活跃, 活跃单(true)-挂单中的订单、非活跃单(false)-已成交或已撤销的订单
+commission	double	订单累计产生交易手续费
+createdDate	long	挂单时间（GMT时间）
+filledSize	double	订单已成交数量
+lastFilledPrice	double	订单最后成交价格
+orderId	long	订单ID
+orderStatus	string	订单状态, 已提交(S)、部份成交(P)、成交(F)、已撤销(C)、部成已撤(CP)、错误(E)、部成错误(EP)、市价单无成交(D)、市价单部份成交(DP)
+orderType	string	订单的类型 限价单(L) 市价单(M) L 止盈止损单(SL)
+price	double	订单价格
+size	double	订单数量
+symbol	string	订单交易对SYMBOL
+triggerPrice	double	止盈止损单触发价
+triggerStatus	boolean	true 已触发 false 未触发
 备注
 更多返回错误代码请看首页的错误代码描述
