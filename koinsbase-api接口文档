@@ -1,5 +1,5 @@
 请求说明：
-1.访问地址：https：//www.koinsbase.cc/#/
+1.访问地址：https://openapi.koinsbase.cc
 2.签名认证 :目前关于apikey申请和修改，请在“个人中心 - API管理”页面进行相关操作。其中AccessKey为API 访问 密钥，SecretKey为用户对请求进行签名的密钥（仅申请时可见）。
 3.签名方法 :每个API接口的所有请求参数均参与签名，参数值为空，不需要参与签名。此外，参与签名的参数还有随机字符串（nonceStr）、时间戳（timestamp）、API访问秘钥（accessKey）;将所有参数按照参数名ASCII码顺序进行排序，通过APISercret使用HmacSHA256协议进行加密，得到签名参数sign
 	// Java版本签名方法
